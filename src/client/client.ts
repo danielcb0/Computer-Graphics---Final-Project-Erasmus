@@ -107,7 +107,7 @@ lightFolder.add(data, 'lightIntensity', 0, 100, 1).onChange(() => {
 });
 
 const earthFolder = gui.addFolder('Earth Rotation');
-earthFolder.add(earth, 'rotationSpeed', 0, 0.0001).name('Speed');
+earthFolder.add(earth, 'rotationSpeed', 0, 0.00001).name('Rotation Speed');
 earthFolder.add(earth, 'orbitSpeed', 0, 0.001).name('Orbit Speed');
 
 function animate() {

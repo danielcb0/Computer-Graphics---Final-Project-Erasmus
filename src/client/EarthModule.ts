@@ -3,7 +3,7 @@ import { SunModule } from './SunModule';
 
 export class EarthModule {
     private earth: THREE.Mesh;
-    public rotationSpeed: number = 0.0001;
+    public rotationSpeed: number = 0.00001;
     public orbitSpeed: number = 0.01/10;
 
 
