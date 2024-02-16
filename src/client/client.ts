@@ -17,11 +17,40 @@ sun.addToScene(scene);
 earth.addToScene(scene);
 moon.addToScene(scene);
 
+// Obtener la luz puntual del sol
+const sunLight = sun.getPointLight(); 
+
 scene.add(new THREE.AxesHelper(5));
 
 // const light = new THREE.PointLight(0xffffff, 50);
 // light.position.set(0.8, 1.4, 1.0);
 // scene.add(light);
+
+
+//Background
+const textureLoader = new THREE.TextureLoader();
+const skyboxTextures = [
+  'textures/ny.png',
+  'textures/ny.png',
+  'textures/ny.png',
+  'textures/ny.png',
+  'textures/ny.png',
+  'textures/ny.png'
+].map(texture => textureLoader.load(texture));
+
+const skyboxGeometry = new THREE.BoxGeometry(1000, 1000, 1000);
+const skyboxMaterial = skyboxTextures.map(texture => new THREE.MeshBasicMaterial({ 
+  map: texture,
+  side: THREE.BackSide 
+}));
+
+const skybox = new THREE.Mesh(skyboxGeometry, skyboxMaterial);
+scene.add(skybox);
+
+
+
+
+
 
 const camera = new THREE.PerspectiveCamera(
     75,
@@ -50,6 +79,15 @@ document.body.appendChild(stats.dom);
 const gui = new GUI();
 
 // Datos para la GUI
+const sunData = {
+    lightIntensity: sunLight.intensity
+};
+const sunFolder = gui.addFolder('Sun Light');
+sunFolder.add(sunData, 'lightIntensity', 0, 100000, 1).onChange(value => {
+    sunLight.intensity = value;
+});
+sunFolder.open(); // Abre este folder por defecto
+
 // Aunque el PointLight ha sido eliminado, mantenemos la configuración de su menú para futuros usos
 const data = {
     // Estos valores ya no afectarán a nada, ya que el PointLight se ha eliminado
@@ -65,6 +103,9 @@ lightFolder.addColor(data, 'color').onChange(() => {
 lightFolder.add(data, 'lightIntensity', 0, 100, 1).onChange(() => {
     // light.intensity = data.lightIntensity;
 });
+
+
+
 
 function animate() {
     requestAnimationFrame(animate);

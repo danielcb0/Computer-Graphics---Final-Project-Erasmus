@@ -11,7 +11,7 @@ export class EarthModule {
             color: 0x0000FF,  // Color de la esfera
         });
         this.sphere = new THREE.Mesh(sphereGeometry, sphereMaterial);
-        this.sphere.position.set(1, 3, 0);
+        this.sphere.position.set(4, 3, 0);
 
     }
 

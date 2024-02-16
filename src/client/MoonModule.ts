@@ -11,7 +11,7 @@ export class MoonModule {
             color: 0x808080,  // Color de la esfera
         });
         this.sphere = new THREE.Mesh(sphereGeometry, sphereMaterial);
-        this.sphere.position.set(1.2, 3, 0);   
+        this.sphere.position.set(4.6, 3, 0);   
 
     }
 
