@@ -3,6 +3,8 @@ import { SunModule } from './SunModule';
 
 export class EarthModule {
     private earth: THREE.Mesh;
+    public rotationSpeed: number = 0.0001;
+    public orbitSpeed: number = 0.01/10;
 
 
     constructor(private sunModule: SunModule) {
@@ -40,18 +42,17 @@ export class EarthModule {
         requestAnimationFrame(() => this.animate());
 
         //Roation of the Earth
-        this.earth.rotateY(+0.0001);
+        this.earth.rotateY(this.rotationSpeed);
 
         //Obtain sun position
         const sunPosition = this.sunModule.getSunPosition();
 
         // Orbita
-        const semiMajorAxis = -7;
-        const semiMinorAxis = 7;
-        const orbitSpeed = 0.01/10;
+        const semiMajorAxis = -27;
+        const semiMinorAxis = 22;
 
-        const positionX = semiMajorAxis * Math.cos(orbitSpeed * Date.now()) + sunPosition.x;
-        const positionZ = semiMinorAxis * Math.sin(orbitSpeed * Date.now()) + sunPosition.z;
+        const positionX = semiMajorAxis * Math.cos(this.orbitSpeed * Date.now()) + sunPosition.x;
+        const positionZ = semiMinorAxis * Math.sin(this.orbitSpeed * Date.now()) + sunPosition.z;
         this.earth.position.set(positionX, sunPosition.y, positionZ);
         
     }
