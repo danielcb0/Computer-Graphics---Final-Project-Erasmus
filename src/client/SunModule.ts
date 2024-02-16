@@ -6,7 +6,7 @@ export class SunModule {
     
     constructor() {
         // Crear la esfera (Sol)
-        const sphereGeometry = new THREE.SphereGeometry(1, 32, 32);
+        const sphereGeometry = new THREE.SphereGeometry(15, 32, 32);
         const textureLoader = new THREE.TextureLoader();
         // Crear el material inicialmente con una textura
         const sphereMaterial = new THREE.MeshStandardMaterial({
