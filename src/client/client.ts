@@ -26,6 +26,32 @@ scene.add(new THREE.AxesHelper(5));
 // light.position.set(0.8, 1.4, 1.0);
 // scene.add(light);
 
+
+//Background
+const textureLoader = new THREE.TextureLoader();
+const skyboxTextures = [
+  'textures/ny.png',
+  'textures/ny.png',
+  'textures/ny.png',
+  'textures/ny.png',
+  'textures/ny.png',
+  'textures/ny.png'
+].map(texture => textureLoader.load(texture));
+
+const skyboxGeometry = new THREE.BoxGeometry(1000, 1000, 1000);
+const skyboxMaterial = skyboxTextures.map(texture => new THREE.MeshBasicMaterial({ 
+  map: texture,
+  side: THREE.BackSide 
+}));
+
+const skybox = new THREE.Mesh(skyboxGeometry, skyboxMaterial);
+scene.add(skybox);
+
+
+
+
+
+
 const camera = new THREE.PerspectiveCamera(
     75,
     window.innerWidth / window.innerHeight,

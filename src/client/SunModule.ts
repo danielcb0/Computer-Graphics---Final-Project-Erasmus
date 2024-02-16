@@ -3,6 +3,7 @@ import * as THREE from 'three';
 export class SunModule {
     private sphere: THREE.Mesh;
     private pointLight: THREE.PointLight;
+    
 
     constructor() {
         // Crear la esfera (Sol)
@@ -24,7 +25,11 @@ export class SunModule {
         // Crear la luz puntual que coincide con la esfera
         this.pointLight = new THREE.PointLight(0xffaa00, 50000, 5);
         this.pointLight.position.set(0, 3, 0);
+
+
     }
+
+    
 
     public addToScene(scene: THREE.Scene): void {
         scene.add(this.sphere);
