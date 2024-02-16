@@ -57,5 +57,9 @@ export class EarthModule {
         
     }
 
+    public getEarthPosition(): THREE.Mesh {
+        return this.earth;
+    }
+
     
 }
