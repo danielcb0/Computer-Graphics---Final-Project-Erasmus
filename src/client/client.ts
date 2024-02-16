@@ -9,8 +9,10 @@ import { EarthModule } from './EarthModule';
 import { MoonModule } from './MoonModule';
 
 const scene = new THREE.Scene();
+const ambientLight = new THREE.AmbientLight(0xffffff, 0.5); // Color, intensidad
+scene.add(ambientLight);
 const sun = new SunModule();
-const earth = new EarthModule();
+const earth = new EarthModule(sun);
 const moon = new MoonModule();
 
 sun.addToScene(scene);
@@ -111,6 +113,7 @@ function animate() {
     requestAnimationFrame(animate);
 
     sun.animate();
+    earth.animate();
 
     render();
     stats.update();

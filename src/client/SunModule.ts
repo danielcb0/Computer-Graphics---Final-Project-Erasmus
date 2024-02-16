@@ -37,4 +37,8 @@ export class SunModule {
     public getPointLight(): THREE.PointLight {
         return this.pointLight;
     }
+
+    public getSunPosition(): THREE.Vector3 {
+        return this.sphere.position;
+    }
 }
