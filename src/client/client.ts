@@ -9,9 +9,11 @@ import { EarthModule } from './EarthModule';
 import { MoonModule } from './MoonModule';
 
 const scene = new THREE.Scene();
+const ambientLight = new THREE.AmbientLight(0xffffff, 0.5); // Color, intensidad
+scene.add(ambientLight);
 const sun = new SunModule();
-const earth = new EarthModule();
-const moon = new MoonModule();
+const earth = new EarthModule(sun);
+const moon = new MoonModule(earth);
 
 sun.addToScene(scene);
 earth.addToScene(scene);
@@ -104,13 +106,16 @@ lightFolder.add(data, 'lightIntensity', 0, 100, 1).onChange(() => {
     // light.intensity = data.lightIntensity;
 });
 
-
-
+const earthFolder = gui.addFolder('Earth Rotation');
+earthFolder.add(earth, 'rotationSpeed', 0, 0.00001).name('Rotation Speed');
+earthFolder.add(earth, 'orbitSpeed', 0, 0.001).name('Orbit Speed');
 
 function animate() {
     requestAnimationFrame(animate);
 
     sun.animate();
+    earth.animate();
+    moon.animate();
 
     render();
     stats.update();

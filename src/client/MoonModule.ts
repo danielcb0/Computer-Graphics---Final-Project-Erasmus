@@ -1,18 +1,23 @@
 import * as THREE from 'three';
+import { EarthModule } from './EarthModule';
 
 export class MoonModule {
     private sphere: THREE.Mesh;
+    public orbitSpeed: number = 0.01/10;
 
-
-    constructor() {
+    constructor(private earthModule: EarthModule) {
         // Crear la esfera (Luna)
-        const sphereGeometry = new THREE.SphereGeometry(0.025, 32, 32);
+        const sphereGeometry = new THREE.SphereGeometry(0.25, 32, 32);
+        const textureLoader = new THREE.TextureLoader();
+        const moonTexture = textureLoader.load('textures/2k_moon.jpg'); // Ruta de la textura de la luna
         const sphereMaterial = new THREE.MeshStandardMaterial({
-            color: 0x808080,  // Color de la esfera
+            map: moonTexture,  // Asignar la textura a la esfera
         });
-        this.sphere = new THREE.Mesh(sphereGeometry, sphereMaterial);
-        this.sphere.position.set(4.6, 3, 0);   
 
+        this.sphere = new THREE.Mesh(sphereGeometry, sphereMaterial);
+        this.sphere.castShadow = true;
+        this.sphere.receiveShadow = true;
+        //this.sphere.position.set(0.6, 0, 0); // Posición relativa a la tierra
     }
 
     public addToScene(scene: THREE.Scene): void {
@@ -20,6 +25,17 @@ export class MoonModule {
     }
 
     public animate(): void {
-        
+        requestAnimationFrame(() => this.animate());
+
+        //Obtain earth position
+        const earthPosition = this.earthModule.getEarthPosition();
+
+        // Orbita
+        const semiMajorAxis = -27;
+        const semiMinorAxis = 22;
+
+        const positionX = semiMajorAxis * Math.cos(this.orbitSpeed * Date.now()) + earthPosition.x;
+        const positionZ = semiMinorAxis * Math.sin(this.orbitSpeed * Date.now()) + earthPosition.z;
+        this.sphere.position.set(positionX, earthPosition.y, positionZ);
     }
 }
