@@ -7,6 +7,7 @@ import { GUI } from 'dat.gui';
 import { SunModule } from './SunModule';
 import { EarthModule } from './EarthModule';
 import { MoonModule } from './MoonModule';
+import { MercuryModule } from './MercuryModule';
 
 const scene = new THREE.Scene();
 const ambientLight = new THREE.AmbientLight(0xffffff, 0.5); // Color, intensidad
@@ -14,10 +15,12 @@ scene.add(ambientLight);
 const sun = new SunModule();
 const earth = new EarthModule(sun);
 const moon = new MoonModule(earth);
+const mercury = new MercuryModule(sun);
 
 sun.addToScene(scene);
 earth.addToScene(scene);
 moon.addToScene(scene);
+mercury.addToScene(scene);
 
 // Obtener la luz puntual del sol
 const sunLight = sun.getPointLight(); 
@@ -115,6 +118,7 @@ function animate() {
 
     sun.animate();
     earth.animate();
+    mercury.animate();
     moon.animate();
 
     render();

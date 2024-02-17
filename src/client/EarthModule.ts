@@ -48,8 +48,8 @@ export class EarthModule {
         const sunPosition = this.sunModule.getSunPosition();
 
         // Orbita
-        const semiMajorAxis = -10;
-        const semiMinorAxis = 8;
+        const semiMajorAxis = -35;
+        const semiMinorAxis = 34;
 
         const positionX = semiMajorAxis * Math.cos(this.orbitSpeed * Date.now()) + sunPosition.x;
         const positionZ = semiMinorAxis * Math.sin(this.orbitSpeed * Date.now()) + sunPosition.z;

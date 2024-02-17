@@ -3,7 +3,7 @@ import { EarthModule } from './EarthModule';
 
 export class MoonModule {
     private sphere: THREE.Mesh;
-    public orbitSpeed: number = 0.01/10;
+    public orbitSpeed: number = 0.05/10;
 
     constructor(private earthModule: EarthModule) {
         // Crear la esfera (Luna)
@@ -31,8 +31,8 @@ export class MoonModule {
         const earthPosition = this.earthModule.getEarthPosition();
 
         // Orbita
-        const semiMajorAxis = -27;
-        const semiMinorAxis = 22;
+        const semiMajorAxis = -5;
+        const semiMinorAxis = 4;
 
         const positionX = semiMajorAxis * Math.cos(this.orbitSpeed * Date.now()) + earthPosition.x;
         const positionZ = semiMinorAxis * Math.sin(this.orbitSpeed * Date.now()) + earthPosition.z;
