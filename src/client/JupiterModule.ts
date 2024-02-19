@@ -1,13 +1,13 @@
 import * as THREE from 'three';
 import { SunModule } from './SunModule';
 
-
 export class JupiterModule {
     private jupiter: THREE.Mesh;
-    public rotationSpeed: number = 0.00001;
-    public orbitSpeed: number = 0.01 / 10;
+    public rotationSpeed: number = (2 * Math.PI) / (9 * 365 * 10); // Velocidad de rotación ajustada para Júpiter
+    public orbitSpeed: number = (2 * Math.PI) / (9 * 365 * 10); // Velocidad de traslación ajustada para Júpiter
     public orbitRadius: number = 100;
     public path: THREE.Line;
+    private startTime: number = Date.now();
 
     constructor(private sunModule: SunModule) {
         // Crear la esfera (Júpiter)
@@ -59,11 +59,10 @@ export class JupiterModule {
         const sunPosition = this.sunModule.getSunPosition();
 
         // Posicion de Júpiter en la órbita
-        const angle = this.orbitSpeed * Date.now();
-        const positionX = this.orbitRadius * Math.cos(angle) + sunPosition.x;
-        const positionZ = this.orbitRadius * Math.sin(angle) + sunPosition.z;
+        const elapsedTime = (Date.now() - this.startTime) * this.orbitSpeed;
+        const positionX = this.orbitRadius * Math.cos(elapsedTime) + sunPosition.x;
+        const positionZ = this.orbitRadius * Math.sin(elapsedTime) + sunPosition.z;
         this.jupiter.position.set(positionX, sunPosition.y, positionZ);
-
     }
 
     public getJupiterPosition(): THREE.Mesh {

@@ -3,10 +3,11 @@ import { SunModule } from './SunModule';
 
 export class VenusModule {
     private venus: THREE.Mesh;
-    public rotationSpeed: number = 0.00001;
-    public orbitSpeed: number = 0.01 / 10;
+    public rotationSpeed: number = (2 * Math.PI) / (24 * 225 * 10); // Velocidad de rotación ajustada para Venus
+    public orbitSpeed: number = (2 * Math.PI) / (225 * 10); // Velocidad de traslación ajustada para Venus
     public orbitRadius: number = 40;
     public path: THREE.Line;
+    private startTime: number = Date.now();
 
     constructor(private sunModule: SunModule) {
         // Crear la esfera (Venus)
@@ -62,11 +63,10 @@ export class VenusModule {
         const sunPosition = this.sunModule.getSunPosition();
 
         // Posicion de Venus en la órbita
-        const angle = this.orbitSpeed * Date.now();
-        const positionX = this.orbitRadius * Math.cos(angle) + sunPosition.x;
-        const positionZ = this.orbitRadius * Math.sin(angle) + sunPosition.z;
+        const elapsedTime = (Date.now() - this.startTime) * this.orbitSpeed;
+        const positionX = this.orbitRadius * Math.cos(elapsedTime) + sunPosition.x;
+        const positionZ = this.orbitRadius * Math.sin(elapsedTime) + sunPosition.z;
         this.venus.position.set(positionX, sunPosition.y, positionZ);
-
     }
 
     public getVenusPosition(): THREE.Mesh {

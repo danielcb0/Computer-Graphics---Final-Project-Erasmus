@@ -3,10 +3,11 @@ import { SunModule } from './SunModule';
 
 export class EarthModule {
     private earth: THREE.Mesh;
-    public rotationSpeed: number = 0.00001;
-    public orbitSpeed: number = 0.01 / 10;
+    public rotationSpeed: number = (2 * Math.PI) / (24 * 365*10); // Velocidad de rotación ajustada
+    public orbitSpeed: number = (2 * Math.PI) / (365 * 10); // Velocidad de traslación ajustada
     public orbitRadius: number = 60;
     public path: THREE.Line;
+    private startTime: number = Date.now();
 
     constructor(private sunModule: SunModule) {
         // Crear la esfera (Tierra)
@@ -54,20 +55,36 @@ export class EarthModule {
 
     public animate(): void {
         requestAnimationFrame(() => this.animate());
-
+    
         // Rotación de la Tierra
+        this.rotateEarth();
+    
+        // Actualizar posición de la Tierra en la órbita
+        this.updateEarthPosition();
+    }
+    
+    private rotateEarth(): void {
+        // Rotación de la Tierra alrededor de su propio eje
         this.earth.rotateY(this.rotationSpeed);
-
+    }
+    
+    private updateEarthPosition(): void {
         // Obtener posición del sol
         const sunPosition = this.sunModule.getSunPosition();
-
-        // Posicion de la Tierra en la órbita
-        const angle = this.orbitSpeed * Date.now();
-        const positionX = this.orbitRadius * Math.cos(angle) + sunPosition.x;
-        const positionZ = this.orbitRadius * Math.sin(angle) + sunPosition.z;
+    
+        // Obtener el tiempo acumulado desde el inicio de la animación
+        const elapsedTime = (Date.now() - this.startTime) * this.orbitSpeed;
+    
+        // Calcular la posición de la Tierra en la órbita alrededor del sol
+        const positionX = this.orbitRadius * Math.cos(elapsedTime) + sunPosition.x;
+        const positionZ = this.orbitRadius * Math.sin(elapsedTime) + sunPosition.z;
+    
+        // Establecer la posición de la Tierra
         this.earth.position.set(positionX, sunPosition.y, positionZ);
-
     }
+    
+    
+    
 
     public getEarthPosition(): THREE.Mesh {
         return this.earth;
