@@ -7,6 +7,9 @@ import { GUI } from 'dat.gui';
 import { SunModule } from './SunModule';
 import { EarthModule } from './EarthModule';
 import { MoonModule } from './MoonModule';
+import { VenusModule } from './VenusModule';
+import { MarsModule } from './MarteModule';
+import { JupiterModule } from './JupiterModule';
 
 const scene = new THREE.Scene();
 const ambientLight = new THREE.AmbientLight(0xffffff, 0.5); // Color, intensidad
@@ -14,10 +17,18 @@ scene.add(ambientLight);
 const sun = new SunModule();
 const earth = new EarthModule(sun);
 const moon = new MoonModule();
+const venus = new VenusModule(sun);
+const mars = new MarsModule(sun);
+const jupiter = new JupiterModule(sun);
 
 sun.addToScene(scene);
 earth.addToScene(scene);
 moon.addToScene(scene);
+venus.addToScene(scene);
+mars.addToScene(scene);
+jupiter.addToScene(scene);
+
+
 
 // Obtener la luz puntual del sol
 const sunLight = sun.getPointLight(); 
@@ -115,6 +126,11 @@ function animate() {
 
     sun.animate();
     earth.animate();
+    //moon.animate();
+    venus.animate();
+    mars.animate();
+    jupiter.animate();
+
 
     render();
     stats.update();
