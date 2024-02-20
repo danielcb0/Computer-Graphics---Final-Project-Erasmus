@@ -13,7 +13,7 @@ export class NeptuneModule {
         // Crear la esfera (neptune)
         const neptuneGeometry = new THREE.SphereGeometry(1, 720, 360);
         const neptuneMaterial = new THREE.MeshStandardMaterial();
-        const texture = new THREE.TextureLoader().load('textures/saturnTexture.jpg');
+        const texture = new THREE.TextureLoader().load('textures/neptuneTexture.jpg');
         texture.anisotropy = 16;
         neptuneMaterial.map = texture;
 
@@ -65,7 +65,7 @@ export class NeptuneModule {
         this.neptune.position.set(positionX, sunPosition.y, positionZ);
     }
 
-    public getSaturnPosition(): THREE.Mesh {
+    public getPlanetPosition(): THREE.Mesh {
         return this.neptune;
     }
 }

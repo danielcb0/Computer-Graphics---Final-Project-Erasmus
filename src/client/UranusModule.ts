@@ -65,7 +65,7 @@ export class UranusModule {
         this.uranus.position.set(positionX, sunPosition.y, positionZ);
     }
 
-    public getUranusPosition(): THREE.Mesh {
+    public getPlanetPosition(): THREE.Mesh {
         return this.uranus;
     }
 }
