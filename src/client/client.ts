@@ -148,7 +148,7 @@ function focusOnPlanet(planetModule: any) {
     if (planetModule instanceof SunModule) {
         // Si es el sol, utiliza una posición fija para la cámara
         planetPosition = new THREE.Vector3(0, 0, 0); // Asumiendo que el sol está en el origen
-        camera.position.set(0, 50, 100); // Ajusta estos valores según sea necesario
+        camera.position.set(40.8, 1.4, 1.0); // Ajusta estos valores según sea necesario
         camera.lookAt(planetPosition);
         orbitControls.target.set(planetPosition.x, planetPosition.y, planetPosition.z);
     } else {
@@ -179,7 +179,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
 
 
-    // Añade más listeners según sea necesario
 });
 
 
@@ -191,26 +190,28 @@ function animate() {
 
     sun.animate();
     earth.animate();
-    //moon.animate();
     venus.animate();
     mars.animate();
     jupiter.animate();
 
-
     if (isFollowingPlanet && currentFocusedPlanet) {
-        const planetPosition = currentFocusedPlanet.getPlanetPosition().position;
-        camera.position.set(planetPosition.x + 10, planetPosition.y + 10, planetPosition.z + 10);
-        camera.lookAt(planetPosition);
-        orbitControls.target.set(planetPosition.x, planetPosition.y, planetPosition.z);
+        // Verificar si getPlanetPosition devuelve un objeto válido
+        const planetInfo = currentFocusedPlanet.getPlanetPosition();
+        if (planetInfo && planetInfo.position) {
+            const { x, y, z } = planetInfo.position;
+            camera.position.set(x + 10, y + 10, z + 10);
+            camera.lookAt(x, y, z);
+            orbitControls.target.set(x, y, z);
+        }
     }
 
     orbitControls.update();
-
     render();
     stats.update();
 }
 function render() {
     renderer.render(scene, camera);
 }
+
 
 animate();
