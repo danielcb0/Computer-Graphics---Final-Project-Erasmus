@@ -86,4 +86,7 @@ export class EarthModule {
     public getPlanetPosition(): THREE.Mesh {
         return this.earth;
     }
+    public getEarthPosition(): THREE.Vector3 {
+        return this.earth.position;
+    }
 }

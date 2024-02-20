@@ -13,7 +13,7 @@ import { JupiterModule } from './JupiterModule';
 import { NeptuneModule } from './NeptuneModule';
 import { MercuryModule } from './MercuryModule';
 import { UranusModule } from './UranusModule';
-
+import { SaturnModule } from './SaturnModule'; 
 
 
 
@@ -24,16 +24,16 @@ scene.add(ambientLight);
 // Initialize the planetary modules
 const sun = new SunModule();
 const earth = new EarthModule(sun);
-const moon = new MoonModule();
+const moon = new MoonModule(earth);
 const mercury = new MercuryModule(sun);
 const venus = new VenusModule(sun);
 const mars = new MarsModule(sun);
 const jupiter = new JupiterModule(sun);
 const uranus = new UranusModule(sun);
 const neptune = new NeptuneModule(sun);
-
+const saturn = new SaturnModule(sun);
 // Add planetary modules to the scene
-[sun, earth, moon, mercury, venus, mars, jupiter, uranus, neptune].forEach(module => module.addToScene(scene));
+[sun, earth, moon, mercury, venus, mars, jupiter, saturn, uranus, neptune].forEach(module => module.addToScene(scene));
 
 let currentFocusedPlanet: any = null;
 
@@ -116,10 +116,10 @@ function createPlanetGUI(planetName:any, planetModule:any) {
 createPlanetGUI('Mercury', mercury);
 createPlanetGUI('Venus', venus);
 createPlanetGUI('Earth', earth);
-//createPlanetGUI('Moon', moon);
+createPlanetGUI('Moon', moon);
 createPlanetGUI('Mars', mars);
 createPlanetGUI('Jupiter', jupiter);
-//createPlanetGUI('Saturn', saturn);
+createPlanetGUI('Saturn', saturn);
 createPlanetGUI('Uranus', uranus);
 createPlanetGUI('Neptune', neptune);
 
@@ -166,8 +166,10 @@ document.addEventListener('DOMContentLoaded', () => {
     document.getElementById('focusMercury')?.addEventListener('click', () => focusOnPlanet(mercury));
     document.getElementById('focusVenus')?.addEventListener('click', () => focusOnPlanet(venus));
     document.getElementById('focusEarth')?.addEventListener('click', () => focusOnPlanet(earth));
+    document.getElementById('focusMoon')?.addEventListener('click', () => focusOnPlanet(moon));
     document.getElementById('focusMars')?.addEventListener('click', () => focusOnPlanet(mars));
     document.getElementById('focusJupyter')?.addEventListener('click', () => focusOnPlanet(jupiter));
+    document.getElementById('focusSaturn')?.addEventListener('click', () => focusOnPlanet(saturn));
     document.getElementById('focusUranus')?.addEventListener('click', () => focusOnPlanet(uranus));
     document.getElementById('focusNeptune')?.addEventListener('click', () => focusOnPlanet(neptune));
 
@@ -179,10 +181,12 @@ function animate() {
 
     sun.animate();
     earth.animate();
+    moon.animate();
     mercury.animate();
     venus.animate();
     mars.animate();
     jupiter.animate();
+    saturn.animate();
     uranus.animate();
     neptune.animate();
 

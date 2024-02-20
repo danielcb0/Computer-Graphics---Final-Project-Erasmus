@@ -10,7 +10,6 @@ export class MercuryModule {
     private startTime: number = Date.now();
 
     constructor(private sunModule: SunModule) {
-        // Crear la esfera (mercury)
         const mercuryGeometry = new THREE.SphereGeometry(1, 720, 360);
         const mercuryMaterial = new THREE.MeshStandardMaterial();
         const texture = new THREE.TextureLoader().load('textures/2k_mercury.jpg');
@@ -30,7 +29,6 @@ export class MercuryModule {
         const points = [];
         const orbitGeometry = new THREE.BufferGeometry();
 
-        // Añadir puntos a la órbita
         for (let i = 0; i <= 360; i++) {
             const theta = THREE.MathUtils.degToRad(i);
             const x = this.orbitRadius * Math.cos(theta) + this.mercury.position.x;
@@ -38,13 +36,10 @@ export class MercuryModule {
             const point = new THREE.Vector3(x, this.mercury.position.y, z);
             points.push(point);
         }
-        // Establecer los puntos en la geometría de la órbita
         orbitGeometry.setFromPoints(points);
 
-        // Material de la órbita de Saturno
         const orbitMaterial = new THREE.LineBasicMaterial({ color: 0xffffff, linewidth: 1 }); // Color blanco, ancho de línea 1
 
-        // Crear el objeto de la línea de la órbita
         this.path = new THREE.Line(orbitGeometry, orbitMaterial);
     }
 
@@ -56,13 +51,10 @@ export class MercuryModule {
     public animate(): void {
         requestAnimationFrame(() => this.animate());
 
-        // Rotación de Neptuno
         this.mercury.rotateY(this.rotationSpeed);
 
-        // Obtener posición del sol
         const sunPosition = this.sunModule.getPlanetPosition();
 
-        // Posicion de mercury en la órbita
         const elapsedTime = (Date.now() - this.startTime) * this.orbitSpeed;
         const positionX = this.orbitRadius * Math.cos(elapsedTime) + sunPosition.x;
         const positionZ = this.orbitRadius * Math.sin(elapsedTime) + sunPosition.z;
