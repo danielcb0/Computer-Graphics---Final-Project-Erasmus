@@ -12,8 +12,10 @@ import { MarsModule } from './MarteModule';
 import { JupiterModule } from './JupiterModule';
 
 const scene = new THREE.Scene();
-const ambientLight = new THREE.AmbientLight(0xffffff, 0.5); // Color, intensidad
+const ambientLight = new THREE.AmbientLight(0xffffff, 0.5);
 scene.add(ambientLight);
+
+// Initialize the planetary modules
 const sun = new SunModule();
 const earth = new EarthModule(sun);
 const moon = new MoonModule();
@@ -21,37 +23,19 @@ const venus = new VenusModule(sun);
 const mars = new MarsModule(sun);
 const jupiter = new JupiterModule(sun);
 
-sun.addToScene(scene);
-earth.addToScene(scene);
-moon.addToScene(scene);
-venus.addToScene(scene);
-mars.addToScene(scene);
-jupiter.addToScene(scene);
+// Add planetary modules to the scene
+[sun, earth, moon, venus, mars, jupiter].forEach(module => module.addToScene(scene));
 
-// Variable global para el planeta enfocado
-let currentFocusedPlanet: any = null; 
+let currentFocusedPlanet: any = null;
 
+// Sun's point light
+const sunLight = sun.getPointLight();
 
-
-// Obtener la luz puntual del sol
-const sunLight = sun.getPointLight(); 
-
-scene.add(new THREE.AxesHelper(5));
-
-// const light = new THREE.PointLight(0xffffff, 50);
-// light.position.set(0.8, 1.4, 1.0);
-// scene.add(light);
-
-
-//Background
+// Background skybox
 const textureLoader = new THREE.TextureLoader();
 const skyboxTextures = [
-  'textures/ny.png',
-  'textures/ny.png',
-  'textures/ny.png',
-  'textures/ny.png',
-  'textures/ny.png',
-  'textures/ny.png'
+    'textures/ny.png', 'textures/ny.png', 'textures/ny.png', 
+    'textures/ny.png', 'textures/ny.png', 'textures/ny.png'
 ].map(texture => textureLoader.load(texture));
 
 const skyboxGeometry = new THREE.BoxGeometry(1000, 1000, 1000);
@@ -63,12 +47,7 @@ const skyboxMaterial = skyboxTextures.map(texture => new THREE.MeshBasicMaterial
 const skybox = new THREE.Mesh(skyboxGeometry, skyboxMaterial);
 scene.add(skybox);
 
-
-
-
-
-
-// Creación de la cámara y renderizador
+// Camera and renderer setup
 const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
 camera.position.set(40.8, 1.4, 1.0);
 
@@ -76,23 +55,24 @@ const renderer = new THREE.WebGLRenderer();
 renderer.setSize(window.innerWidth, window.innerHeight);
 document.body.appendChild(renderer.domElement);
 
-// Crear OrbitControls
-const orbitControls = new OrbitControls(camera, renderer.domElement);
+//Shadows
+renderer.shadowMap.enabled = true;
+renderer.shadowMap.type = THREE.PCFSoftShadowMap; 
 
-// Agrega un flag para controlar el seguimiento
+sunLight.castShadow = true;
+sunLight.shadow.mapSize.width = 512;  // Resolución de la sombra
+sunLight.shadow.mapSize.height = 512;
+sunLight.shadow.camera.near = 0.5;
+sunLight.shadow.camera.far = 500;
+
+
+
+const orbitControls = new OrbitControls(camera, renderer.domElement);
 let isFollowingPlanet = false;
 
 orbitControls.addEventListener('start', () => {
-    // Cuando el usuario comienza a interactuar con los controles de órbita
     isFollowingPlanet = false;
 });
-
-
-
-
-
-
-
 
 window.addEventListener('resize', onWindowResize, false);
 function onWindowResize() {
@@ -106,69 +86,56 @@ document.body.appendChild(stats.dom);
 
 const gui = new GUI();
 
-// Datos para la GUI
 const sunData = {
     lightIntensity: sunLight.intensity
 };
+
 const sunFolder = gui.addFolder('Sun Light');
 sunFolder.add(sunData, 'lightIntensity', 0, 100000, 1).onChange(value => {
     sunLight.intensity = value;
 });
-sunFolder.open(); // Abre este folder por defecto
+sunFolder.open();
 
-// Aunque el PointLight ha sido eliminado, mantenemos la configuración de su menú para futuros usos
-const data = {
-    // Estos valores ya no afectarán a nada, ya que el PointLight se ha eliminado
-    // Se podrían eliminar o dejar para futuras referencias o usos
-    color: 0xffffff,
-    lightIntensity: 50,
-};
-
-const lightFolder = gui.addFolder('Point Light');
-lightFolder.addColor(data, 'color').onChange(() => {
-    // light.color.setHex(Number(data.color.toString().replace('#', '0x')));
-});
-lightFolder.add(data, 'lightIntensity', 0, 100, 1).onChange(() => {
-    // light.intensity = data.lightIntensity;
-});
-
-// Datos para la GUI de cada planeta
-const planetData = {
-    'Earth': { rotationSpeed: earth.rotationSpeed, orbitSpeed: earth.orbitSpeed },
-    'Venus': { rotationSpeed: venus.rotationSpeed, orbitSpeed: venus.orbitSpeed },
-    'Mars': { rotationSpeed: mars.rotationSpeed, orbitSpeed: mars.orbitSpeed },
-    'Jupiter': { rotationSpeed: jupiter.rotationSpeed, orbitSpeed: jupiter.orbitSpeed }
-};
-
-// Función para crear una GUI para un planeta
-function createPlanetGUI(planetName: any, planetModule: any) {
+// GUI setup for each planet
+function createPlanetGUI(planetName:any, planetModule:any) {
     const folder = gui.addFolder(`${planetName} Rotation`);
     folder.add(planetModule, 'rotationSpeed', 0, 0.00001).name('Rotation Speed');
     folder.add(planetModule, 'orbitSpeed', 0, 0.001).name('Orbit Speed');
 }
 
-// Crear GUI para cada planeta
 createPlanetGUI('Earth', earth);
 createPlanetGUI('Venus', venus);
 createPlanetGUI('Mars', mars);
 createPlanetGUI('Jupiter', jupiter);
 
 
-// Función para enfocar en un planeta
-function focusOnPlanet(planetModule: any) {
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+// Function to focus on a planet
+function focusOnPlanet(planetModule:any) {
     currentFocusedPlanet = planetModule;
     isFollowingPlanet = true;
 
     let planetPosition;
 
     if (planetModule instanceof SunModule) {
-        // Si es el sol, utiliza una posición fija para la cámara
-        planetPosition = new THREE.Vector3(0, 0, 0); // Asumiendo que el sol está en el origen
-        camera.position.set(40.8, 1.4, 1.0); // Ajusta estos valores según sea necesario
+        planetPosition = new THREE.Vector3(0, 0, 0); 
+        camera.position.set(40.8, 1.4, 1.0);
         camera.lookAt(planetPosition);
         orbitControls.target.set(planetPosition.x, planetPosition.y, planetPosition.z);
     } else {
-        // Para otros planetas, sigue el procedimiento habitual
         planetPosition = planetModule.getPlanetPosition().position;
         camera.position.set(planetPosition.x + 10, planetPosition.y + 10, planetPosition.z + 10);
         camera.lookAt(planetPosition);
@@ -178,29 +145,16 @@ function focusOnPlanet(planetModule: any) {
     orbitControls.update();
 }
 
-
-
-// Añadir listeners para los botones después de que se haya cargado la página
+// Event listeners for planet selection buttons
 document.addEventListener('DOMContentLoaded', () => {
     document.getElementById('focusSun')?.addEventListener('click', () => focusOnPlanet(sun));
-    //document.getElementById('focusMercury')?.addEventListener('click', () => focusOnPlanet(mercury));
     document.getElementById('focusVenus')?.addEventListener('click', () => focusOnPlanet(venus));
     document.getElementById('focusEarth')?.addEventListener('click', () => focusOnPlanet(earth));
     document.getElementById('focusMars')?.addEventListener('click', () => focusOnPlanet(mars));
-    document.getElementById('focusJupyter')?.addEventListener('click', () => focusOnPlanet(jupiter));
-    //document.getElementById('focusSaturn')?.addEventListener('click', () => focusOnPlanet(saturn));
-    //document.getElementById('focusUranus')?.addEventListener('click', () => focusOnPlanet(uranus));
-    //document.getElementById('focusNeptune')?.addEventListener('click', () => focusOnPlanet(neptune));
-
-
-
-
+    document.getElementById('focusJupiter')?.addEventListener('click', () => focusOnPlanet(jupiter));
 });
 
-
-
-
-
+// Animation loop
 function animate() {
     requestAnimationFrame(animate);
 
@@ -211,7 +165,6 @@ function animate() {
     jupiter.animate();
 
     if (isFollowingPlanet && currentFocusedPlanet) {
-        // Verificar si getPlanetPosition devuelve un objeto válido
         const planetInfo = currentFocusedPlanet.getPlanetPosition();
         if (planetInfo && planetInfo.position) {
             const { x, y, z } = planetInfo.position;
@@ -225,9 +178,9 @@ function animate() {
     render();
     stats.update();
 }
+
 function render() {
     renderer.render(scene, camera);
 }
-
 
 animate();
