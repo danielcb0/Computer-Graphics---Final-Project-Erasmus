@@ -132,10 +132,26 @@ lightFolder.add(data, 'lightIntensity', 0, 100, 1).onChange(() => {
     // light.intensity = data.lightIntensity;
 });
 
-const earthFolder = gui.addFolder('Earth Rotation');
-earthFolder.add(earth, 'rotationSpeed', 0, 0.00001).name('Rotation Speed');
-earthFolder.add(earth, 'orbitSpeed', 0, 0.001).name('Orbit Speed');
+// Datos para la GUI de cada planeta
+const planetData = {
+    'Earth': { rotationSpeed: earth.rotationSpeed, orbitSpeed: earth.orbitSpeed },
+    'Venus': { rotationSpeed: venus.rotationSpeed, orbitSpeed: venus.orbitSpeed },
+    'Mars': { rotationSpeed: mars.rotationSpeed, orbitSpeed: mars.orbitSpeed },
+    'Jupiter': { rotationSpeed: jupiter.rotationSpeed, orbitSpeed: jupiter.orbitSpeed }
+};
 
+// Función para crear una GUI para un planeta
+function createPlanetGUI(planetName: any, planetModule: any) {
+    const folder = gui.addFolder(`${planetName} Rotation`);
+    folder.add(planetModule, 'rotationSpeed', 0, 0.00001).name('Rotation Speed');
+    folder.add(planetModule, 'orbitSpeed', 0, 0.001).name('Orbit Speed');
+}
+
+// Crear GUI para cada planeta
+createPlanetGUI('Earth', earth);
+createPlanetGUI('Venus', venus);
+createPlanetGUI('Mars', mars);
+createPlanetGUI('Jupiter', jupiter);
 
 
 // Función para enfocar en un planeta
