@@ -10,7 +10,7 @@ export class MarsModule {
     private startTime: number = Date.now();
 
     constructor(private sunModule: SunModule) {
-        // Crear la esfera (Marte)
+        // Create the sphere (Mars)
         const marsGeometry = new THREE.SphereGeometry(1, 720, 360);
         const marsMaterial = new THREE.MeshStandardMaterial();
         const texture = new THREE.TextureLoader().load('textures/marsTexture.jpg');
@@ -30,7 +30,7 @@ export class MarsModule {
         const points = [];
         const orbitGeometry = new THREE.BufferGeometry();
 
-        // Añadir puntos a la órbita
+        // Adding points to the orbit
         for (let i = 0; i <= 360; i++) {
             const theta = THREE.MathUtils.degToRad(i);
             const x = this.orbitRadius * Math.cos(theta) + this.mars.position.x;
@@ -38,13 +38,13 @@ export class MarsModule {
             const point = new THREE.Vector3(x, this.mars.position.y, z);
             points.push(point);
         }
-        // Establecer los puntos en la geometría de la órbita
+        // Set the points in the geometry of the orbit
         orbitGeometry.setFromPoints(points);
 
-        // Material de la órbita de Marte
+        // Mars orbit material
         const orbitMaterial = new THREE.LineBasicMaterial({ color: 0xffffff, linewidth: 1 }); // Color blanco, ancho de línea 1
 
-        // Crear el objeto de la línea de la órbita
+        // Create orbit line object
         this.path = new THREE.Line(orbitGeometry, orbitMaterial);
     }
 
@@ -56,13 +56,13 @@ export class MarsModule {
     public animate(): void {
         requestAnimationFrame(() => this.animate());
 
-        // Rotación de Marte
+        // Rotation of Mars
         this.mars.rotateY(this.rotationSpeed);
 
-        // Obtener posición del sol
+        // Get position of the sun
         const sunPosition = this.sunModule.getPlanetPosition();
 
-        // Posicion de Marte en la órbita
+        // Position of Mars in orbit
         const elapsedTime = (Date.now() - this.startTime) * this.orbitSpeed;
         const positionX = this.orbitRadius * Math.cos(elapsedTime) + sunPosition.x;
         const positionZ = this.orbitRadius * Math.sin(elapsedTime) + sunPosition.z;

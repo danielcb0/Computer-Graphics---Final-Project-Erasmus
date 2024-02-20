@@ -3,14 +3,14 @@ import { SunModule } from './SunModule';
 
 export class VenusModule {
     private venus: THREE.Mesh;
-    public rotationSpeed: number = (2 * Math.PI) / (24 * 225 * 10); // Velocidad de rotación ajustada para Venus
-    public orbitSpeed: number = (2 * Math.PI) / (225 * 10); // Velocidad de traslación ajustada para Venus
+    public rotationSpeed: number = (2 * Math.PI) / (24 * 225 * 10); // Adjusted rotation speed for Venus
+    public orbitSpeed: number = (2 * Math.PI) / (225 * 10); // Adjusted orbit speed for Venus
     public orbitRadius: number = 40;
     public path: THREE.Line;
     private startTime: number = Date.now();
 
     constructor(private sunModule: SunModule) {
-        // Crear la esfera (Venus)
+        // Create the sphere (Venus)
         const venusGeometry = new THREE.SphereGeometry(1, 720, 360);
         const venusMaterial = new THREE.MeshStandardMaterial();
         const texture = new THREE.TextureLoader().load('textures/venusTexture.jpg');
@@ -30,7 +30,7 @@ export class VenusModule {
         const points = [];
         const orbitGeometry = new THREE.BufferGeometry();
 
-        // Añadir puntos a la órbita
+        // Add points to the orbit
         for (let i = 0; i <= 360; i++) {
             const theta = THREE.MathUtils.degToRad(i);
             const x = this.orbitRadius * Math.cos(theta) + this.venus.position.x;
@@ -38,13 +38,13 @@ export class VenusModule {
             const point = new THREE.Vector3(x, this.venus.position.y, z);
             points.push(point);
         }
-        // Establecer los puntos en la geometría de la órbita
+        // Set the points in the orbit geometry
         orbitGeometry.setFromPoints(points);
 
-        // Material de la órbita de Venus
-        const orbitMaterial = new THREE.LineBasicMaterial({ color: 0xffffff, linewidth: 1 }); // Color blanco, ancho de línea 1
+        // Material for Venus's orbit
+        const orbitMaterial = new THREE.LineBasicMaterial({ color: 0xffffff, linewidth: 1 }); // White color, line width 1
 
-        // Crear el objeto de la línea de la órbita
+        // Create the orbit line object
         this.path = new THREE.Line(orbitGeometry, orbitMaterial);
     }
 
@@ -56,13 +56,13 @@ export class VenusModule {
     public animate(): void {
         requestAnimationFrame(() => this.animate());
 
-        // Rotación de Venus
+        // Rotation of Venus
         this.venus.rotateY(this.rotationSpeed);
 
-        // Obtener posición del sol
+        // Get the position of the sun
         const sunPosition = this.sunModule.getPlanetPosition();
 
-        // Posicion de Venus en la órbita
+        // Position of Venus in the orbit
         const elapsedTime = (Date.now() - this.startTime) * this.orbitSpeed;
         const positionX = this.orbitRadius * Math.cos(elapsedTime) + sunPosition.x;
         const positionZ = this.orbitRadius * Math.sin(elapsedTime) + sunPosition.z;

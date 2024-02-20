@@ -3,14 +3,14 @@ import { SunModule } from './SunModule';
 
 export class EarthModule {
     private earth: THREE.Mesh;
-    public rotationSpeed: number = (2 * Math.PI) / (24 * 365*10); // Velocidad de rotación ajustada
-    public orbitSpeed: number = (2 * Math.PI) / (365 * 10); // Velocidad de traslación ajustada
+    public rotationSpeed: number = (2 * Math.PI) / (24 * 365*10); // Adjusted rotation speed
+    public orbitSpeed: number = (2 * Math.PI) / (365 * 10); // Adjusted orbit speed
     public orbitRadius: number = 60;
     public path: THREE.Line;
     private startTime: number = Date.now();
 
     constructor(private sunModule: SunModule) {
-        // Crear la esfera (Tierra)
+        // Create the sphere (Earth)
         const earthGeometry = new THREE.SphereGeometry(1, 720, 360);
         const earthMaterial = new THREE.MeshStandardMaterial();
         const texture = new THREE.TextureLoader().load('textures/worldColour.5400x2700.jpg');
@@ -30,7 +30,7 @@ export class EarthModule {
         const points = [];
         const orbitGeometry = new THREE.BufferGeometry();
 
-        // Añadir puntos a la órbita
+        // Add points to the orbit
         for (let i = 0; i <= 360; i++) {
             const theta = THREE.MathUtils.degToRad(i);
             const x = this.orbitRadius * Math.cos(theta) + this.earth.position.x;
@@ -38,13 +38,13 @@ export class EarthModule {
             const point = new THREE.Vector3(x, this.earth.position.y, z);
             points.push(point);
         }
-        // Establecer los puntos en la geometría de la órbita
+        // Set the points in the orbit geometry
         orbitGeometry.setFromPoints(points);
 
-        // Material de la órbita de Mercurio
-        const orbitMaterial = new THREE.LineBasicMaterial({ color: 0xffffff, linewidth: 1 }); // Color blanco, ancho de línea 1
+        // Material for Mercury's orbit
+        const orbitMaterial = new THREE.LineBasicMaterial({ color: 0xffffff, linewidth: 1 }); // White color, line width 1
 
-        // Crear el objeto de la línea de la órbita
+        // Create the orbit line object
         this.path = new THREE.Line(orbitGeometry, orbitMaterial);
     }
 
@@ -56,36 +56,33 @@ export class EarthModule {
     public animate(): void {
         requestAnimationFrame(() => this.animate());
     
-        // Rotación de la Tierra
+        // Earth's rotation
         this.rotateEarth();
     
-        // Actualizar posición de la Tierra en la órbita
+        // Update Earth's position in its orbit
         this.updateEarthPosition();
     }
     
     private rotateEarth(): void {
-        // Rotación de la Tierra alrededor de su propio eje
+        // Earth's rotation around its own axis
         this.earth.rotateY(this.rotationSpeed);
     }
     
     private updateEarthPosition(): void {
-        // Obtener posición del sol
+        // Get the sun's position
         const sunPosition = this.sunModule.getPlanetPosition();
     
-        // Obtener el tiempo acumulado desde el inicio de la animación
+        // Get the accumulated time since the start of the animation
         const elapsedTime = (Date.now() - this.startTime) * this.orbitSpeed;
     
-        // Calcular la posición de la Tierra en la órbita alrededor del sol
+        // Calculate Earth's position in its orbit around the sun
         const positionX = this.orbitRadius * Math.cos(elapsedTime) + sunPosition.x;
         const positionZ = this.orbitRadius * Math.sin(elapsedTime) + sunPosition.z;
     
-        // Establecer la posición de la Tierra
+        // Set Earth's position
         this.earth.position.set(positionX, sunPosition.y, positionZ);
     }
     
-    
-    
-
     public getPlanetPosition(): THREE.Mesh {
         return this.earth;
     }
