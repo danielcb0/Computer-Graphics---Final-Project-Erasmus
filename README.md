@@ -4,10 +4,10 @@
 
 # Setuo
 ## Install dependencies
-npm install
+`npm install`
 
 ## Run the local server
-npm run dev
+`npm run dev`
 
 ## Build for production in the dist/ directory
-npm run build
+`npm run build`
