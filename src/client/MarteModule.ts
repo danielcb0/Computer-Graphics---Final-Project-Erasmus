@@ -60,7 +60,7 @@ export class MarsModule {
         this.mars.rotateY(this.rotationSpeed);
 
         // Obtener posición del sol
-        const sunPosition = this.sunModule.getSunPosition();
+        const sunPosition = this.sunModule.getPlanetPosition();
 
         // Posicion de Marte en la órbita
         const elapsedTime = (Date.now() - this.startTime) * this.orbitSpeed;
@@ -69,7 +69,7 @@ export class MarsModule {
         this.mars.position.set(positionX, sunPosition.y, positionZ);
     }
 
-    public getMarsPosition(): THREE.Mesh {
+    public getPlanetPosition(): THREE.Mesh {
         return this.mars;
     }
 }

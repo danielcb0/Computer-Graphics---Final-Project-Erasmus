@@ -70,7 +70,7 @@ export class EarthModule {
     
     private updateEarthPosition(): void {
         // Obtener posición del sol
-        const sunPosition = this.sunModule.getSunPosition();
+        const sunPosition = this.sunModule.getPlanetPosition();
     
         // Obtener el tiempo acumulado desde el inicio de la animación
         const elapsedTime = (Date.now() - this.startTime) * this.orbitSpeed;
@@ -86,7 +86,7 @@ export class EarthModule {
     
     
 
-    public getEarthPosition(): THREE.Mesh {
+    public getPlanetPosition(): THREE.Mesh {
         return this.earth;
     }
 }

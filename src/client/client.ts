@@ -28,6 +28,9 @@ venus.addToScene(scene);
 mars.addToScene(scene);
 jupiter.addToScene(scene);
 
+// Variable global para el planeta enfocado
+let currentFocusedPlanet: any = null; 
+
 
 
 // Obtener la luz puntual del sol
@@ -65,19 +68,31 @@ scene.add(skybox);
 
 
 
-const camera = new THREE.PerspectiveCamera(
-    75,
-    window.innerWidth / window.innerHeight,
-    0.1,
-    1000
-);
-camera.position.set(0.8, 1.4, 1.0);
+// Creación de la cámara y renderizador
+const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+camera.position.set(40.8, 1.4, 1.0);
 
 const renderer = new THREE.WebGLRenderer();
 renderer.setSize(window.innerWidth, window.innerHeight);
 document.body.appendChild(renderer.domElement);
 
-new OrbitControls(camera, renderer.domElement);
+// Crear OrbitControls
+const orbitControls = new OrbitControls(camera, renderer.domElement);
+
+// Agrega un flag para controlar el seguimiento
+let isFollowingPlanet = false;
+
+orbitControls.addEventListener('start', () => {
+    // Cuando el usuario comienza a interactuar con los controles de órbita
+    isFollowingPlanet = false;
+});
+
+
+
+
+
+
+
 
 window.addEventListener('resize', onWindowResize, false);
 function onWindowResize() {
@@ -121,6 +136,56 @@ const earthFolder = gui.addFolder('Earth Rotation');
 earthFolder.add(earth, 'rotationSpeed', 0, 0.00001).name('Rotation Speed');
 earthFolder.add(earth, 'orbitSpeed', 0, 0.001).name('Orbit Speed');
 
+
+
+// Función para enfocar en un planeta
+function focusOnPlanet(planetModule: any) {
+    currentFocusedPlanet = planetModule;
+    isFollowingPlanet = true;
+
+    let planetPosition;
+
+    if (planetModule instanceof SunModule) {
+        // Si es el sol, utiliza una posición fija para la cámara
+        planetPosition = new THREE.Vector3(0, 0, 0); // Asumiendo que el sol está en el origen
+        camera.position.set(0, 50, 100); // Ajusta estos valores según sea necesario
+        camera.lookAt(planetPosition);
+        orbitControls.target.set(planetPosition.x, planetPosition.y, planetPosition.z);
+    } else {
+        // Para otros planetas, sigue el procedimiento habitual
+        planetPosition = planetModule.getPlanetPosition().position;
+        camera.position.set(planetPosition.x + 10, planetPosition.y + 10, planetPosition.z + 10);
+        camera.lookAt(planetPosition);
+        orbitControls.target.set(planetPosition.x, planetPosition.y, planetPosition.z);
+    }
+
+    orbitControls.update();
+}
+
+
+
+// Añadir listeners para los botones después de que se haya cargado la página
+document.addEventListener('DOMContentLoaded', () => {
+    document.getElementById('focusSun')?.addEventListener('click', () => focusOnPlanet(sun));
+    //document.getElementById('focusMercury')?.addEventListener('click', () => focusOnPlanet(mercury));
+    document.getElementById('focusVenus')?.addEventListener('click', () => focusOnPlanet(venus));
+    document.getElementById('focusEarth')?.addEventListener('click', () => focusOnPlanet(earth));
+    document.getElementById('focusMars')?.addEventListener('click', () => focusOnPlanet(mars));
+    document.getElementById('focusJupyter')?.addEventListener('click', () => focusOnPlanet(jupiter));
+    //document.getElementById('focusSaturn')?.addEventListener('click', () => focusOnPlanet(saturn));
+    //document.getElementById('focusUranus')?.addEventListener('click', () => focusOnPlanet(uranus));
+    //document.getElementById('focusNeptune')?.addEventListener('click', () => focusOnPlanet(neptune));
+
+
+
+
+    // Añade más listeners según sea necesario
+});
+
+
+
+
+
 function animate() {
     requestAnimationFrame(animate);
 
@@ -131,6 +196,15 @@ function animate() {
     mars.animate();
     jupiter.animate();
 
+
+    if (isFollowingPlanet && currentFocusedPlanet) {
+        const planetPosition = currentFocusedPlanet.getPlanetPosition().position;
+        camera.position.set(planetPosition.x + 10, planetPosition.y + 10, planetPosition.z + 10);
+        camera.lookAt(planetPosition);
+        orbitControls.target.set(planetPosition.x, planetPosition.y, planetPosition.z);
+    }
+
+    orbitControls.update();
 
     render();
     stats.update();

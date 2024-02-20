@@ -56,7 +56,7 @@ export class JupiterModule {
         this.jupiter.rotateY(this.rotationSpeed);
 
         // Obtener posición del sol
-        const sunPosition = this.sunModule.getSunPosition();
+        const sunPosition = this.sunModule.getPlanetPosition();
 
         // Posicion de Júpiter en la órbita
         const elapsedTime = (Date.now() - this.startTime) * this.orbitSpeed;
@@ -65,7 +65,7 @@ export class JupiterModule {
         this.jupiter.position.set(positionX, sunPosition.y, positionZ);
     }
 
-    public getJupiterPosition(): THREE.Mesh {
+    public getPlanetPosition(): THREE.Mesh {
         return this.jupiter;
     }
 }

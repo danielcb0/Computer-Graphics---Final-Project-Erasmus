@@ -60,7 +60,7 @@ export class VenusModule {
         this.venus.rotateY(this.rotationSpeed);
 
         // Obtener posición del sol
-        const sunPosition = this.sunModule.getSunPosition();
+        const sunPosition = this.sunModule.getPlanetPosition();
 
         // Posicion de Venus en la órbita
         const elapsedTime = (Date.now() - this.startTime) * this.orbitSpeed;
@@ -69,7 +69,7 @@ export class VenusModule {
         this.venus.position.set(positionX, sunPosition.y, positionZ);
     }
 
-    public getVenusPosition(): THREE.Mesh {
+    public getPlanetPosition(): THREE.Mesh {
         return this.venus;
     }
 }

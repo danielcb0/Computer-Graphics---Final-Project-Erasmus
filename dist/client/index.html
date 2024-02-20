@@ -4,17 +4,63 @@
         <meta charset="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <title>
-            Three.js TypeScript FBX by Erasmus 
+            Solar System | Computer Graphics
         </title>
         <style>
             body {
                 overflow: hidden;
                 margin: 0px;
             }
+
+
+            #camera-controls {
+                position: fixed;
+                left: 0;
+                top: 50%;
+                transform: translateY(-50%);
+                background-color: rgba(0, 0, 0, 0.7);
+                padding: 10px;
+                border-radius: 0 5px 5px 0;
+                box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.5);
+            }
+
+            #camera-controls button {
+                display: block;
+                background-color: #f0f0f0;
+                color: #333;
+                border: none;
+                padding: 10px 20px;
+                margin: 5px 0;
+                border-radius: 5px;
+                text-align: left;
+                font-size: 16px;
+                transition: background-color 0.3s, color 0.3s;
+                cursor: pointer;
+            }
+
+            #camera-controls button:hover {
+                background-color: #333;
+                color: #fff;
+            }
         </style>
     </head>
 
     <body>
+
+        <div id="camera-controls">
+            <button id="focusSun">Sol</button>
+            <button id="focusMercurio">Mercury</button>
+            <button id="focusVenus">Venus</button>
+            <button id="focusEarth">Earth</button>
+            <button id="focusMars">Mars</button>
+            <button id="focusJupyter">Jupyter</button>
+            <button id="focusSaturn">Saturn</button>
+            <button id="focusUranus">Uranus</button>
+            <button id="focusNeptune">Neptune</button>
+            <button id="focusPluto">Pluto</button>
+        </div>
+
+
         <script type="module" src="bundle.js"></script>
     </body>
 </html>
