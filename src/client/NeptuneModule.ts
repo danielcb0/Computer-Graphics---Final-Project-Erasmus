@@ -5,7 +5,7 @@ export class NeptuneModule {
     private neptune: THREE.Mesh;
     public rotationSpeed: number = (2 * Math.PI) / (16 * 365 * 10); // Velocidad de rotación ajustada para Saturno
     public orbitSpeed: number = (2 * Math.PI) / (165 * 365 * 10); // Velocidad de traslación ajustada para Saturno
-    public orbitRadius: number = 20;
+    public orbitRadius: number = 400;
     public path: THREE.Line;
     private startTime: number = Date.now();
 
@@ -13,13 +13,9 @@ export class NeptuneModule {
         // Crear la esfera (neptune)
         const neptuneGeometry = new THREE.SphereGeometry(1, 720, 360);
         const neptuneMaterial = new THREE.MeshStandardMaterial();
-        const texture = new THREE.TextureLoader().load('textures/2k_mercury.jpg');
+        const texture = new THREE.TextureLoader().load('textures/saturnTexture.jpg');
         texture.anisotropy = 16;
         neptuneMaterial.map = texture;
-
-        const displacementMap = new THREE.TextureLoader().load('textures/2k_mercury_bump.jpg');
-        mercuryMaterial.displacementMap = displacementMap;
-        mercuryMaterial.displacementScale = 0.1;
 
         this.neptune = new THREE.Mesh(neptuneGeometry, neptuneMaterial);
         this.neptune.rotateY(-Math.PI / 2);
